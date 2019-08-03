@@ -7,6 +7,7 @@
 // congratulations!
 // game over - stars below 0, timer up
 
+'use strict'
 
 let currentlyFlippedCard;
 const STAR_LOSS_MOVES = 2;
@@ -16,7 +17,8 @@ let timer = null;
 let moveCounter = 0;
 let matchCounter = 0;
 let timeRemaining = 0;
-let gameTime = 0;
+let startTime = 0;
+
 createGameBoard()
 
 document.querySelector('.restart').addEventListener('click', function(){
@@ -129,16 +131,12 @@ function generateListItem(item, listClass) {
 function createCards(){
     // create cards array for 8 pairs of symbols.
     const cards = [
-        'fa-diamond', 'fa-diamond',
-        'fa-paper-plane-o', 'fa-paper-plane-o',
-        'fa-anchor', 'fa-anchor',
-        'fa-bolt', 'fa-bolt',
-        'fa-cube', 'fa-cube',
-        'fa-anchor', 'fa-anchor',
-        'fa-leaf', 'fa-leaf',
-        'fa-bicycle', 'fa-bicycle'
+        'fa-diamond', 'fa-paper-plane-o',
+        'fa-anchor', 'fa-bolt',
+        'fa-cube', 'fa-anchor',
+        'fa-leaf',  'fa-bicycle'
     ]
-    return shuffle(cards);
+    return shuffle(cards.concat(cards));
 }
 
 function createTimer(date) {
@@ -146,12 +144,11 @@ function createTimer(date) {
         if(timer) clearInterval(timer)
         // document.getElementById("timer").innerHTML = "Time up!";
         let countdownTime = new Date(new Date().getTime() + GAME_TIME).getTime();
-        gameTime = countdownTime;
-        console.log('gametime is ', gameTime)
+        startTime = new Date().getTime();
         timer = setInterval(() => {
             let now = new Date().getTime()
             timeRemaining = countdownTime - now
-            document.getElementById("timer").textContent = getFormattedTime()
+            document.getElementById("timer").textContent = getFormattedTime(timeRemaining)
             
             if (timeRemaining < 1000) {
                 if(timer) {
@@ -164,34 +161,21 @@ function createTimer(date) {
     }
 }
 
-function getFormattedTime() {
+function getFormattedTime(time) {
     let minutesLeft, secondsLeft;
 
         //regular countdown
-        minutesLeft = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-        secondsLeft = Math.floor((timeRemaining % (1000 * 60)) / 1000);
+        minutesLeft = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+        secondsLeft = Math.floor((time % (1000 * 60)) / 1000);
         console.log('getFormattedTime timer ')
 
     return minutesLeft + " m" + " : " + secondsLeft + " s";
 }
 
 function getTimeTakenToWin() {
-    let minutesLeft, secondsLeft;
-    console.log('time remaining is ', timeRemaining)
-    console.log('game time is ', gameTime)
-    // let currentTime = gameTime - timeRemaining;
-    // console.log('current time is ', (currentTime % (1000 * 60 * 60)) / (1000 * 60))
-    // minutes = Math.floor(currentTime );
-    // seconds = Math.floor((currentTime % (1000 * 60)) / 1000);
-    minutesLeft = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
-    secondsLeft = Math.floor((timeRemaining % (1000 * 60)) / 1000);
-    gameTimeMins = Math.floor((gameTime % (1000 * 60 * 60)) / (1000 * 60));
-    gameTimeSecs = Math.floor((gameTime % (1000 * 60)) / 1000);
-
-    console.log('gameTimeMins ', gameTimeMins, ' gameTimeSecs ', gameTimeSecs)
-    console.log('minutesLeft ', minutesLeft, ' secondsLeft ', secondsLeft)
-    return gameTimeMins - minutesLeft + ' m' + " : " + gameTimeSecs - secondsLeft + ' s';
-
+  let now =  new Date().getTime();
+  let timeUsed = startTime > now ? startTime - now : now - startTime;
+  return getFormattedTime(timeUsed);
 }
 
 function flipCards(card){
@@ -256,7 +240,5 @@ function shuffle(array) {
         array[currentIndex] = array[randomIndex];
         array[randomIndex] = temporaryValue;
     }
-
-    console.log('after shuffling ', array)
     return array;
 }
