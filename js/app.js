@@ -22,7 +22,6 @@ let startTime = 0;
 createGameBoard()
 
 document.querySelector('.restart').addEventListener('click', function(){
-    console.log("Refreshed")
     // remove all listeners on card
     // remove cards from deck
     // clear moves
@@ -54,7 +53,6 @@ function createStars(){
     })
     
     stars.innerHTML = starHtml.join(``);
-    // console.log('stars ', stars)
 }
 
 function updateStarRating() {
@@ -93,20 +91,15 @@ function createGameBoard(){
     allCards.forEach(function(card) {
         card.addEventListener('click', function(e){
             if(currentlyFlippedCard === card || card.classList.contains('open')) return;
-            // console.log(e)
-            // console.log('onClick card ', card.innerHTML)
             if(!currentlyFlippedCard) {
                 // first click
                 card.classList.add('open', 'show')
                 currentlyFlippedCard = card;
-                // console.log("if currentlyFlippedCard ", currentlyFlippedCard.innerHTML)
             } else {
                 // second click
-                // console.log("currentlyFlippedCard else", currentlyFlippedCard.innerHTML)
                 card.classList.add('open', 'show')
                 updateMoveCounter()
                 compareCards(card)
-                // console.log(listElement)
             }
         })
     })
@@ -162,13 +155,9 @@ function createTimer(date) {
 }
 
 function getFormattedTime(time) {
-    let minutesLeft, secondsLeft;
-
-        //regular countdown
-        minutesLeft = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-        secondsLeft = Math.floor((time % (1000 * 60)) / 1000);
-        console.log('getFormattedTime timer ')
-
+    //regular countdown
+    let minutesLeft = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
+    let secondsLeft = Math.floor((time % (1000 * 60)) / 1000);
     return minutesLeft + " m" + " : " + secondsLeft + " s";
 }
 
@@ -196,19 +185,16 @@ function compareCards(card){
     // compare
 
     if(card.innerHTML === currentlyFlippedCard.innerHTML) {
-        console.log('Match found!!!')
         ++matchCounter
         setTimeout(() => {
             card.classList.add('open', 'show', 'match')
             currentlyFlippedCard.classList.add('open', 'show', 'match')
             currentlyFlippedCard = null;
-            console.log('Match counter ', matchCounter);
             if(matchCounter === 8) { // 8 pairs == 16 cards on deck
                 winner()
             }
         }, 300)
     } else {
-        console.log('no match')
         updateStarRating()
         setTimeout(function() {
             card.classList.remove('open', 'show', 'match')
@@ -232,7 +218,6 @@ function winner() {
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
-    console.log('b4 shuffling ', array)
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
