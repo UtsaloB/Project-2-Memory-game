@@ -39,14 +39,11 @@ function restartGame() {
     createGameBoard();
 }
 
-function createStars(){
-    let starList = [
-        'fa-star',
-        'fa-star',
-        'fa-star',
-        'fa-star',
-        'fa-star'
-    ]
+function createStars() {
+    let starList = []
+    for (var i = 0; i < 4; i++){
+        starList.push('fa-star');
+    }
     let stars = document.querySelector('.stars')
     let starHtml = starList.map((star)=>{
         return generateListItem(star)
